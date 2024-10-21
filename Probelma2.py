@@ -411,7 +411,7 @@ encabezado = obtener_encabezado(img)
 print("Correcion de encabezado: \n")
 imprime_encabezado(encabezado)
 
-
+aprobados = []
 """c)Aplico las funciones definidas anteriormente para cada examen"""
 for n in range(1,6):
     img = cv2.imread(r'Imagenes de Entrada\examen_' + str(n) +'.png', cv2.IMREAD_GRAYSCALE)
@@ -433,7 +433,10 @@ for n in range(1,6):
     correctas = ['C','B','A','D','B','B','A','B','D','D']
     print("Correccion:")
     print("----------------")
-    imprimir_correccion(respuestas, correctas)
+    aprobacion = imprimir_correccion(respuestas, correctas)
+    img_nombre = encabezado[0][1]
+
+    aprobados.append((img_nombre,aprobacion))
     print("----------------\n")
 
 """d)"""
