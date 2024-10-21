@@ -62,6 +62,8 @@ Instala los paquetes necesarios utilizando el gestor de paquetes `pip`:
 
 Después de seguir estos pasos, ya estarás listo para ejecutar el código y procesar la imagen de prueba. Asegúrate de tener las imágenes disponibles en el mismo directorio que tu script o de modificar el código para apuntar a las rutas correctas.
 
+Para esto basta con ejecutar el archivo .py del problema de su preferencia.
+
 
 ## Contribuciones
 
