@@ -329,6 +329,9 @@ def imprimir_correccion(respuestas, correctas):
         else:
             print("Pregunta " + str(i+1), 'MAL')
 
+    aprobacion = sum(correcion) > 5
+    return aprobacion
+
 
 #PUNTO b)
 def imprime_encabezado(encabezado, ver_bin = False):
@@ -419,7 +422,6 @@ for n in range(1,6):
 
     celdas = obtener_celdas(img)
     respuestas = obtener_respuestas(celdas)
-
     encabezado = obtener_encabezado(img)
 
     
