@@ -184,16 +184,14 @@ def obtener_respuestas(celdas, ver_bins = False, ver_rtas = False):
 
         rtas.append(rta)
         
-    
     if ver_rtas:
         plt.figure(figsize=(10, 10))
-        indices = [1,3,5,7,9,2,4,6,8,10]
-        for i in range(len(rtas)):
-            img = rtas[i][1]
-            id = rtas[i][0]
-            plt.subplot(5,2,indices[i])
-            plt.imshow(img, cmap='gray', vmin=0, vmax=255), plt.title('Respuesta a pregunta ' + str(id))
-            plt.xticks([]),plt.yticks([])
+        for i, (id, img, coord) in enumerate(rtas):
+            plt.subplot(5, 2, i + 1)
+            plt.imshow(celdas[i][1], cmap='gray', vmin=0, vmax=255)  # Mostrar la celda original
+            plt.imshow(img, cmap='gray', alpha=0.5)  # Superponer la imagen de respuesta
+            plt.title(f'Respuesta a pregunta {id}')
+            plt.xticks([]), plt.yticks([])
 
         plt.suptitle('Respuestas del examen')
         plt.tight_layout(rect=[0, 0, 1, 0.95])
@@ -411,8 +409,11 @@ encabezado = obtener_encabezado(img)
 print("Correcion de encabezado: \n")
 imprime_encabezado(encabezado)
 
-aprobados = []
+
 """c)Aplico las funciones definidas anteriormente para cada examen"""
+#Almaceno la aprobacion de cada examen para el item d)
+#Guardo crop del campo nombre y True o False segun apruebe o no
+resultados = [] 
 for n in range(1,6):
     img = cv2.imread(r'Imagenes de Entrada\examen_' + str(n) +'.png', cv2.IMREAD_GRAYSCALE)
 
@@ -436,40 +437,56 @@ for n in range(1,6):
     aprobacion = imprimir_correccion(respuestas, correctas)
     img_nombre = encabezado[0][1]
 
-    aprobados.append((img_nombre,aprobacion))
+    resultados.append((img_nombre,aprobacion))
     print("----------------\n")
+
 
 """d)"""
 #Creo una imagen artificial
-img_nombre = aprobados[0][0] #Imagen del nombre del primer examen
+img_nombre = resultados[0][0] #Imagen del nombre del primer examen
 ancho_nombre = img_nombre.shape[1]
 alto_nombre = img_nombre.shape[0]
 ancho = ancho_nombre
-alto = alto_nombre * len(aprobados)
+alto = alto_nombre * len(resultados)
 
 #Creo imagen blanco con ancho y alto calculados anteriormente
-img_salida = np.uint8(np.ones((alto,ancho)) * 255)
-img_salida.shape
-plt.imshow(img_salida, cmap='gray', vmin=0, vmax=255)
+img_blanca = np.uint8(np.ones((alto,ancho)) * 255)
+img_blanca.shape
+plt.imshow(img_blanca, cmap='gray', vmin=0, vmax=255), plt.title('Imagen artificial blanca')
 plt.show()
 
-#Recorto una letra A de la imagen del examen
+#Recorto una letra A de la imagen del examen para especificar si aprobo o no
 A = img[100:115,33:48]
-img_salida[0:0+alto_nombre,0:0+ancho_nombre] = img_nombre
-imshow(A)
+ancho_A = A.shape[1]
+alto_A = A.shape[0]
+imshow(A, title='Letra A de aprobacion', colorbar=False)
 
 #Calculo ancho y alto de los crop de nombre
 x1 = 0
-i = 1
-for nombre in aprobados:
-    img_nombre = nombre[0] #Imagen del nombre
-    imshow(img_nombre)
+
+#Coordenadas donde pegar la A en caso de aprobacion
+x1A = 3
+x2A = x1A + alto_A
+y1A = - ancho_A - 5
+y2A = y1A + ancho_A
+
+img_salida = img_blanca.copy()
+#Para cada uno de los resultados
+for nombre in resultados:
+    img_nombre = nombre[0].copy() #Imagen del nombre, copia para no modificar original
+    aprobo = nombre[1]
+    if aprobo: #Si aprobo le pego una A a la derecha del nombre 
+        img_nombre[x1A:x2A,-20:-5] = A
+    
+    #Calculo ancho y alto del nombre
     ancho_nombre = img_nombre.shape[1]
     alto_nombre = img_nombre.shape[0]
+
+    #Lo pego en la imagen de salida
     img_salida[x1:x1+alto_nombre,0:ancho] = img_nombre
-    print(x1)
+    
+    #Incremento la primer coordenada con el alto del nombre
     x1 += alto_nombre
 
-
-for i,x in enumerate(range(0,alto,alto_nombre)):
-    img[x:x+alto_nombre,0:alto_nombre]
+#Muestro la imagen de salida resultante
+imshow(img_salida, title='Resultados de los examenes', colorbar=False)
