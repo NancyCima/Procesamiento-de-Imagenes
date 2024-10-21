@@ -454,14 +454,11 @@ alto = alto_nombre * len(resultados)
 #Creo imagen blanco con ancho y alto calculados anteriormente
 img_blanca = np.uint8(np.ones((alto,ancho)) * 255)
 img_blanca.shape
-plt.imshow(img_blanca, cmap='gray', vmin=0, vmax=255), plt.title('Imagen artificial blanca')
-plt.show()
 
 #Recorto una letra A de la imagen del examen para especificar si aprobo o no
 A = img[100:115,33:48]
 ancho_A = A.shape[1]
 alto_A = A.shape[0]
-imshow(A, title='Letra A de aprobacion', colorbar=False)
 
 #Calculo ancho y alto de los crop de nombre
 x1 = 0
@@ -492,3 +489,4 @@ for nombre in resultados:
 
 #Muestro la imagen de salida resultante
 imshow(img_salida, title='Resultados de los examenes', colorbar=False)
+plt.savefig('Resultados de los examenes.png')
