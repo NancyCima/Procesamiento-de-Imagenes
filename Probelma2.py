@@ -435,3 +435,38 @@ for n in range(1,6):
     print("----------------")
     imprimir_correccion(respuestas, correctas)
     print("----------------\n")
+
+"""d)"""
+#Creo una imagen artificial
+img_nombre = aprobados[0][0] #Imagen del nombre del primer examen
+ancho_nombre = img_nombre.shape[1]
+alto_nombre = img_nombre.shape[0]
+ancho = ancho_nombre
+alto = alto_nombre * len(aprobados)
+
+#Creo imagen blanco con ancho y alto calculados anteriormente
+img_salida = np.uint8(np.ones((alto,ancho)) * 255)
+img_salida.shape
+plt.imshow(img_salida, cmap='gray', vmin=0, vmax=255)
+plt.show()
+
+#Recorto una letra A de la imagen del examen
+A = img[100:115,33:48]
+img_salida[0:0+alto_nombre,0:0+ancho_nombre] = img_nombre
+imshow(A)
+
+#Calculo ancho y alto de los crop de nombre
+x1 = 0
+i = 1
+for nombre in aprobados:
+    img_nombre = nombre[0] #Imagen del nombre
+    imshow(img_nombre)
+    ancho_nombre = img_nombre.shape[1]
+    alto_nombre = img_nombre.shape[0]
+    img_salida[x1:x1+alto_nombre,0:ancho] = img_nombre
+    print(x1)
+    x1 += alto_nombre
+
+
+for i,x in enumerate(range(0,alto,alto_nombre)):
+    img[x:x+alto_nombre,0:alto_nombre]
